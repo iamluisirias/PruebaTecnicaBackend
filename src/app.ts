@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+const sequelize = require('./database/sequelize');
 
 
 import { ApiError, errorLog } from '../helpers';
@@ -15,7 +16,7 @@ const morgan = require('morgan');
 
 
 try {
-  //connectMongoDB();
+
 
   //For env File
   dotenv.config();
