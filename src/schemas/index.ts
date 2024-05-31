@@ -5,6 +5,13 @@ export const validateLoginSchema = z.object({
   password: z.string().min(6),
 });
 
+export const validateRegisterSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
 export const validateCollaboratorSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
