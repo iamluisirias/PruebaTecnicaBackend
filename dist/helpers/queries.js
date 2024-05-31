@@ -1,5 +1,5 @@
+"use strict";
 // import { MySqlSelect } from 'drizzle-orm/mysql-core';
-
 // export function withPagination<T extends MySqlSelect>(
 //   queryBuilder: T,
 //   page: number,
@@ -11,6 +11,5 @@
 //   } else {
 //     actualPage = page - 1;
 //   }
-
 //   return queryBuilder.limit(limit).offset(actualPage * limit);
 // }

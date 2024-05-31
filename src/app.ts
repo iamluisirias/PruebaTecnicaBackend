@@ -1,23 +1,15 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-const sequelize = require('./database/sequelize');
+import morgan from 'morgan';
 
+import routerApi from './index';
 
-import { ApiError, errorLog } from '../helpers';
+const db = require('../models');
 
-import routerApi from '../api/index';
-
-import { createServer } from 'http';
 import { errorHandler } from '../helpers/errorHandler';
 
-const morgan = require('morgan');
-
-
-
 try {
-
-
   //For env File
   dotenv.config();
 
@@ -34,8 +26,10 @@ try {
 
   app.use(errorHandler);
 
-  app.listen(port, () => {
-    console.log(`Server running on port: ${port}`);
+  db.sequelize.sync().then(() => {
+    app.listen(port, () => {
+      console.log(`Server running on port: ${port}`);
+    });
   });
 } catch (error) {
   console.log(error);

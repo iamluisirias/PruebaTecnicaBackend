@@ -8,7 +8,10 @@
     "start": "ts-node src/app.ts",
     "dev": "ts-node helpers/env.ts && nodemon src/app.ts",
     "command": "node commands/index.ts",
-    "seeder:run": "ts-node database/seeders/seed.ts"
+    "seeder:run": "ts-node database/seeders/seed.ts",
+    "migration:create": "npx sequelize-cli migration:create",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:rollback": "npx sequelize-cli db:migrate:undo"
   },
   "keywords": [],
   "author": "Fernando Mendez",
