@@ -1,18 +1,21 @@
 import { z } from 'zod';
 
-import { ApiError, ApiResponse } from '../../helpers';
+import {
+  ApiError,
+  ApiResponse,
+  compareHashedPassword,
+  hashPassword,
+} from '../../helpers';
 
-import { validateLoginSchema } from '../schemas';
+import { validateLoginSchema, validateRegisterSchema } from '../schemas';
 
-const User = require('../../models/user');
+const models = require('../../models');
 
 export async function loginController(
   body: z.infer<typeof validateLoginSchema>
 ) {
-  const { password } = body;
-
   // manage errors
-  if (password.length < 6) {
+  if (body.password.length < 6) {
     throw new ApiError({
       statusCode: 400,
       message: 'Invalid password',
@@ -20,14 +23,34 @@ export async function loginController(
     });
   }
 
-  let authenticated = false;
   // get user with that email
-
-  const user = await User.findAll();
+  const user = await models.User.findOne({
+    where: {
+      email: body.email,
+    },
+  });
 
   console.log(user);
 
-  // Something happened
+  // Something happened, validating data
+  if (!user) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized',
+      title: 'Error',
+    });
+  }
+
+  if (
+    body.email !== user.email ||
+    !(await compareHashedPassword(body.password, user.password))
+  ) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized',
+      title: 'Error',
+    });
+  }
 
   // all good
   return new ApiResponse({
@@ -35,10 +58,50 @@ export async function loginController(
     message: 'Success',
     success: true,
     data: {
-      authenticated,
+      authenticated: true,
       email: body.email,
-      username: 'example',
-      rol: 'admin',
+      firstName: user.firstName,
+      lastName: user.lastName,
+      // username: 'example',
+      // role: 'admin',
+    },
+    title: 'Success',
+  });
+}
+
+export async function registerController(
+  body: z.infer<typeof validateRegisterSchema>
+) {
+  // manage errors
+  if (body.password.length < 6) {
+    throw new ApiError({
+      statusCode: 400,
+      message: 'Invalid password',
+      title: 'Warning',
+    });
+  }
+
+  // get user with that email
+  const user = await models.User.create({
+    firstName: body.firstName,
+    lastName: body.lastName,
+    email: body.email,
+    password: await hashPassword(body.password),
+  });
+
+  console.log({ id: user.id });
+
+  // all good
+  return new ApiResponse({
+    statusCode: 200,
+    message: 'Success',
+    success: true,
+    data: {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      // username: 'example',
+      // role: 'admin',
     },
     title: 'Success',
   });
