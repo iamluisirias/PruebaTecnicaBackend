@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const auth_route_1 = __importDefault(require("./routes/auth.route"));
+const collaborator_route_1 = __importDefault(require("./routes/collaborator.route"));
 function routerApi(app) {
-    app.use(auth_route_1.default);
-    // other routes here
+    app.use('/api', auth_route_1.default, collaborator_route_1.default);
 }
 exports.default = routerApi;
