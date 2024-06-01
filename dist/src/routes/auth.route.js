@@ -11,4 +11,11 @@ router.post('/login', async function (req, res) {
     const response = await (0, auth_controller_1.loginController)(values);
     return res.status(response.statusCode).json(response);
 });
+router.post('/register', async function (req, res) {
+    // Checking the values received
+    const values = await schemas_1.validateRegisterSchema.parseAsync(req.body);
+    // trying the response
+    const response = await (0, auth_controller_1.registerController)(values);
+    return res.status(response.statusCode).json(response);
+});
 exports.default = router;

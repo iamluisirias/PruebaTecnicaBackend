@@ -31,13 +31,16 @@ module.exports = (sequelize: Sequelize, DataTypes: any) => {
       id: {
         type: DataTypes.UUID,
         allowNull: false,
-        defaultValue: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
       job: DataTypes.STRING,
-      identity: DataTypes.STRING,
+      identity: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
       phone: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,

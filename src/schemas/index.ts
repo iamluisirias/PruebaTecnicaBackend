@@ -16,8 +16,8 @@ export const validateCollaboratorSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   job: z.string(),
-  // id: z.string(),
+  identity: z.string(),
   phone: z.string(),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(6),
 });

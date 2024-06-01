@@ -30,8 +30,6 @@ export async function loginController(
     },
   });
 
-  console.log(user);
-
   // Something happened, validating data
   if (!user) {
     throw new ApiError({
@@ -53,6 +51,12 @@ export async function loginController(
   }
 
   // all good
+  // generate token
+
+  const token = Buffer.from(`${body.email}:${body.password}`).toString(
+    'base64'
+  );
+
   return new ApiResponse({
     statusCode: 200,
     message: 'Success',
@@ -62,6 +66,7 @@ export async function loginController(
       email: body.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      token,
       // username: 'example',
       // role: 'admin',
     },
@@ -77,6 +82,19 @@ export async function registerController(
     throw new ApiError({
       statusCode: 400,
       message: 'Invalid password',
+      title: 'Warning',
+    });
+  }
+
+  // Checking if user exists
+  const possibleUser = await models.User.findOne({
+    where: { email: body.email },
+  });
+
+  if (possibleUser) {
+    throw new ApiError({
+      statusCode: 400,
+      message: 'User already exists',
       title: 'Warning',
     });
   }
