@@ -4,6 +4,7 @@ import {
   loginController,
   registerController,
 } from '../controllers/auth.controller';
+
 import { validateLoginSchema, validateRegisterSchema } from '../schemas';
 
 const router = Router();
